@@ -69,7 +69,11 @@ class Game():
             print(f"У Player осталось {self.player.health} жизней")
 
 
+player = Hero("Player")
+computer = Hero("Computer")
 
+game = Game(player, computer)
+game.start()
 
 
 
