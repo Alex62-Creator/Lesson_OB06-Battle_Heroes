@@ -42,6 +42,34 @@ class Hero():
         return self.health
 
 
+class Game():
+    def __init__(self, player, computer):
+        self.player = player
+        self.computer = computer
+
+    def start(self):
+        print("Бой начинается")
+
+        while True:
+            if self.computer.health <= 0:
+                print("Player победил!!!!!!!")
+                break
+            elif self.player.health <= 0:
+                print("Computer победил. Не расстраивайтесь. Следующий раз повезет.")
+                break
+
+            power = int(input(f"Ваша максимальная сила удара: {self.player.attack_power}. С какой силой будете бить? "))
+            print(f"Player нанес удар силой {power}")
+            self.player.attack(power, self.computer)
+            print(f"У Computer осталось {self.computer.health} жизней")
+
+            power = random.randint(1, self.computer.attack_power)
+            print(f"Computer нанес удар силой {power}")
+            self.computer.attack(power, self.player)
+            print(f"У Player осталось {self.player.health} жизней")
+
+
+
 
 
 
