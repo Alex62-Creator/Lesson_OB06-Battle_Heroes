@@ -23,55 +23,64 @@
 # start(): начинает игру, чередует ходы игрока и компьютера, пока один из героев не умрет. Выводит информацию о каждом ходе
 # (кто атаковал и сколько здоровья осталось у противника) и объявляет победителя.
 
-import random
+import random                                           # Импорт модуля random
 
+#Класс описывающий игроков
 class Hero():
     def __init__(self, name):
-        self.name = name
-        self.health = 100
-        self.attack_power = 20
+        self.name = name                                # Имя игрока
+        self.health = 100                                # Уровень здоровья
+        self.attack_power = 20                          # Сила удара
 
-    def attack(self, power, other):
-        effect = random.randint(0, 10)
-        other.health -= int((power * effect/10) // 1)
+    def attack(self, power, other):                     # Имитирует атаку
+        effect = random.randint(0, 10)            # Уровень применения защиты противником
+        other.health -= int((power * effect/10) // 1)   # Уменьшение здоровья противника с учетом защиты
         print(f"Противник применил защитный прием. Сила удара получилась {int((power * effect/10) // 1)}")
-        if self.attack_power > 10:
-            self.attack_power -= int((effect / 5) // 1)
+        if self.attack_power > 5:
+            self.attack_power -= int((power / 5) // 1) # Уменьшение собственной силы удара из-за усталости
 
-    def is_alive(self):
-        return self.health
+    def is_alive(self):                                 # Определяет возможность продолжения боя игроком (уровень здоровья > 0)
+        if self.health > 0:
+            return True
+        else:
+            return False
 
-
+#Класс описывающий механизм ведения боя
 class Game():
     def __init__(self, player, computer):
-        self.player = player
-        self.computer = computer
+        self.player = player                            # Игрок (объект класса Hero)
+        self.computer = computer                        # Компьютер (объект класса Hero)
 
-    def start(self):
-        print("Бой начинается")
+    def start(self):                                    # Реализует механизм ведения боя
+        print("Бой начинается\nВы выступаете в роли Игрока")
 
-        while True:
-            if self.computer.health <= 0:
-                print("Player победил!!!!!!!")
-                break
-            elif self.player.health <= 0:
-                print("Computer победил. Не расстраивайтесь. Следующий раз повезет.")
-                break
+        while True:                                     # Цикл проведения раундов
 
+            # Атака Игрока
             power = int(input(f"Ваша максимальная сила удара: {self.player.attack_power}. С какой силой будете бить? "))
-            print(f"Player нанес удар силой {power}")
+            print(f"Игрок нанес удар силой {power}")
             self.player.attack(power, self.computer)
-            print(f"У Computer осталось {self.computer.health} жизней")
+            if self.computer.is_alive():                # Проверяем уровень здоровья Компьютера
+                print(f"У Компьютера осталось {self.computer.health}% здоровья")
+            else:
+                print("Игрок победил!!!!!!!")
+                break
 
-            power = random.randint(1, self.computer.attack_power)
-            print(f"Computer нанес удар силой {power}")
+            # Атака Компьютера
+            power = random.randint(1, self.computer.attack_power)   # Сила удара Компьютера
+            print(f"Компьютер нанес удар силой {power}")
             self.computer.attack(power, self.player)
-            print(f"У Player осталось {self.player.health} жизней")
+            if self.player.is_alive():                  # Проверяем уровень здоровья Игрока
+                print(f"У Игрока осталось {self.player.health}% здоровья")
+            else:
+                print("Компьютер победил. Не расстраивайтесь. Следующий раз повезет.")
+                break
 
+# Создаём объекты игроков
+player = Hero("Игрок")
+computer = Hero("Компьютер")
 
-player = Hero("Player")
-computer = Hero("Computer")
-
+# Создаём объект механизма боя и запускаем бой
 game = Game(player, computer)
 game.start()
 
